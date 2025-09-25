@@ -9,7 +9,7 @@ def emotion_detector(text_to_analyze):
         text_to_analyze (str): The text to be analyzed.
 
     Returns:
-        str: The raw text response from the API.
+        dict: A dictionary of detected emotions and their scores, including the dominant emotion.
     """
     
     # URL for the Watson NLP Emotion Predict endpoint.
@@ -31,8 +31,27 @@ def emotion_detector(text_to_analyze):
         
         # Check if the request was successful (status code 200).
         if response.status_code == 200:
-            # Return the raw text of the response, as specified in the task description.
-            return response.text
+            # Parse the JSON response.
+            formatted_response = json.loads(response.text)
+            
+            # Extract the dictionary of emotion scores.
+            emotion_data = formatted_response['emotionPredictions'][0]['emotion']
+            
+            # Find the dominant emotion.
+            dominant_emotion = max(emotion_data, key=emotion_data.get)
+            
+            # Prepare the output dictionary in the requested format.
+            output_format = {
+                'anger': emotion_data['anger'],
+                'disgust': emotion_data['disgust'],
+                'fear': emotion_data['fear'],
+                'joy': emotion_data['joy'],
+                'sadness': emotion_data['sadness'],
+                'dominant_emotion': dominant_emotion
+            }
+            
+            # Return the dictionary.
+            return output_format
         else:
             # Handle unsuccessful responses.
             return None
