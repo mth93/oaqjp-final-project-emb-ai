@@ -52,6 +52,16 @@ def emotion_detector(text_to_analyze):
             
             # Return the dictionary.
             return output_format
+        elif response.status_code == 400:
+            # Handle unsuccessful responses for blank text
+            return {
+                'anger': None,
+                'disgust': None,
+                'fear': None,
+                'joy': None,
+                'sadness': None,
+                'dominant_emotion': None
+            }
         else:
             # Handle unsuccessful responses.
             return None

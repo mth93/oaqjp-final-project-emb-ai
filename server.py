@@ -21,16 +21,12 @@ def emotion_detector_route():
     # Get the text to analyze from the request's query parameters
     text_to_analyze = request.args.get('textToAnalyze')
     
-    # Check for empty or invalid input
-    if not text_to_analyze:
-        return "Invalid text. Please provide some text to analyze."
-
     # Call the emotion_detector function to get the analysis result
     response = emotion_detector(text_to_analyze)
     
     # Check if the response from the emotion_detector is valid
-    if response is None:
-        return "Error: Could not get a valid response from the emotion detection service."
+    if response is None or response['dominant_emotion'] is None:
+        return "Invalid text! Please try again!."
 
     # Format the output string as per the task requirements
     formatted_output = (
